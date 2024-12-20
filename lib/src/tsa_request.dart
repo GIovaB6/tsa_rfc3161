@@ -15,6 +15,7 @@ class TSARequest extends TSACommon {
   bool? certReq;
   String? filepath;
   TSAHash? algorithm;
+  List<int>? fileBytes;
 
   TSARequest();
 
@@ -105,6 +106,18 @@ class TSARequest extends TSACommon {
         _getSeqMessageImprintSequence(message: fileBytes, algorithm: algorithm);
 
     _init(messageImprint: messageImprint, nonce: nonce, certReq: certReq);
+  }
+
+  TSARequest.fromBytes(
+      {required this.fileBytes,
+      this.nonce,
+      this.certReq,
+      required this.algorithm}) {
+    if (fileBytes != null) {
+      ASN1Sequence messageImprint = _getSeqMessageImprintSequence(
+          message: fileBytes!, algorithm: algorithm);
+      _init(messageImprint: messageImprint, nonce: nonce, certReq: certReq);
+    }
   }
 
   TSARequest.fromString(
